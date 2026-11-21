@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Netlify Next.js runtime (OpenNext) otomatik olarak devreye girer.
+# Sürüm sabitlenmez; Netlify her derlemede güncel adaptörü kullanır.
