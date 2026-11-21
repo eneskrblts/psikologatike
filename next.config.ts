@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     "/**/*": ["./data/**/*"],
   },
   turbopack: {
+    root: process.cwd(),
     rules: {
       "*.css": {
         loaders: ["@tailwindcss/turbopack"],

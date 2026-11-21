@@ -25,6 +25,11 @@ function isNetlify(): boolean {
   return process.env.NETLIFY === "true" || Boolean(process.env.NETLIFY_BLOBS_CONTEXT);
 }
 
+/** `next build` sırasında Blobs'a yazma denenmez (build plugin'leri yalnızca deploy store'a yazabilir). */
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === "phase-production-build";
+}
+
 async function blobStore() {
   if (!storePromise) {
     storePromise = import("@netlify/blobs").then(({ getStore }) =>
@@ -80,9 +85,10 @@ export async function readArticles(): Promise<Article[]> {
       if (stored && Array.isArray(stored)) {
         list = stored;
       } else {
-        // İlk çalıştırma: deploy ile gelen seed verisini Blobs'a aktar
+        // İlk çalıştırma: deploy ile gelen seed verisini Blobs'a aktar.
+        // Build sırasında yazma denenmez; ilk istekte aktarılır.
         list = await readJson<Article[]>(ARTICLES_FILE, []);
-        if (list.length > 0) await writeBlob(ARTICLES_KEY, list);
+        if (list.length > 0 && !isBuildPhase()) await writeBlob(ARTICLES_KEY, list);
       }
     } catch (error) {
       console.error("[store] Blobs okunamadı, dosyaya düşülüyor:", error);

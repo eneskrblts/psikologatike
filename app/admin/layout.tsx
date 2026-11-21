@@ -6,7 +6,9 @@ import { AdminTopbar } from "@/components/admin-topbar";
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-shell">
-      <AdminTopbar />
+      <Suspense fallback={<div className="h-20 border-b border-ink/8 bg-cream/80" />}>
+        <AdminTopbar />
+      </Suspense>
       <Suspense
         fallback={
           <div className="container-page py-16">
